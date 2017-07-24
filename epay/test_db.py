@@ -1,15 +1,15 @@
 # -*- coding:utf-8 -*-
 
 import unittest
-from db.core import DbTemplate
-import db.core
-from db.factory import OracleConnectionFactory
+from database.core import DatabaeTemplate
+import database.core
+from database.factory import OracleConnectionFactory
 
 CONNECT_URL = 'epayment/Epay789*QWE@localhost:15211/tyzf'
 HOST = 'localhost'
 USERNAME = 'epayment'
 PASSWORD = 'Epay789*QWE'
-PORT = 15211
+PORT = 15215
 SERVICE = 'tyzf'
 
 
@@ -18,7 +18,7 @@ class DBTest(unittest.TestCase):
     def setUp(self):
         connect_factory = OracleConnectionFactory(host=HOST, username=USERNAME,
                                                   password=PASSWORD, port=PORT, service=SERVICE)
-        self.db_template = DbTemplate(connect_factory=connect_factory)
+        self.db_template = DatabaeTemplate(connect_factory=connect_factory)
 
     def test_connect(self):
         sql = 'SELECT count(*) as count from T_CITY'
@@ -33,12 +33,18 @@ class DBTest(unittest.TestCase):
         WHERE PARAM_CODE='PARENT_ACCOUNT_PID' AND ORG_ID LIKE 'Ali%' AND PARAM_VALUE IS NOT NULL
         """
 
-        results = self.db_template.query_list(sql, outputtypehandler=db.core.output_type_handler)
+        results = self.db_template.query_list(sql, outputtypehandler=database.core.output_type_handler,
+                                              row_factory=database.core.makedict)
         if results is not None:
             for res in results:
                 print res
         else:
             print "results is None"
+
+    def test_desc(self):
+        sql = "DESC T_PAYMENT_ORDER"
+
+        self.db_template.execute(sql)
 
 if __name__ == '__main__':
 
