@@ -9,8 +9,8 @@ import base64
 
 def digest(key, data):
 
-    iv = Random.new().read(DES3.block_size)
-    cipher = DES3.new(key, DES3.MODE_CBC, iv)
+    # iv = Random.new().read(DES3.block_size)
+    cipher = DES3.new(key, DES3.MODE_ECB)
     encrypt_data = cipher.encrypt(data)
     h = MD5.new(encrypt_data)
     md5_data = h.digest()
@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
     pswdWeb = "BBDmwTjBsF7IwTIyGWt1bmFn"
 
-    originWeb = c_idWeb + "," + o_idWeb + "," + o_timeWeb + "," + merchant + ","+ user + ","+ ","+ point + ","+ amount + ","
+    originWeb = c_idWeb + "," + o_idWeb + "," + o_timeWeb + "," + merchant + "," + user + "," + "," + point + "," + amount + ","
     print originWeb
     print len(originWeb)
 
