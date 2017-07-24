@@ -1,0 +1,39 @@
+<alipay>
+	<is_success>T</is_success>
+	<request>
+		<param name="_input_charset">UTF-8</param>
+		<param name="service">single_trade_query</param>
+		<param name="partner">2088421589772560</param>
+		<param name="out_trade_no">201707170855170400131945</param>
+	</request>
+	<response>
+		<trade>
+			<buyer_email>13500108809@139.com</buyer_email>
+			<buyer_id>2088812274392505</buyer_id>
+			<discount>0.00</discount>
+			<flag_trade_locked>0</flag_trade_locked>
+			<gmt_create>2017-07-17 08:55:21</gmt_create>
+			<gmt_last_modified_time>2017-07-17 08:55:31</gmt_last_modified_time>
+			<gmt_payment>2017-07-17 08:55:31</gmt_payment>
+			<is_total_fee_adjust>F</is_total_fee_adjust>
+			<operator_role>B</operator_role>
+			<out_trade_no>201707170855170400131945</out_trade_no>
+			<payment_type>1</payment_type>
+			<price>12.00</price>
+			<quantity>1</quantity>
+			<seller_email>czgmcc@sina.com</seller_email>
+			<seller_id>2088421603897905</seller_id>
+			<subject>收费</subject>
+			<time_out>2017-10-18 08:55:31</time_out>
+			<time_out_type>finishFPAction</time_out_type>
+			<to_buyer_fee>0.00</to_buyer_fee>
+			<to_seller_fee>12.00</to_seller_fee>
+			<total_fee>12.00</total_fee>
+			<trade_no>2017071721001004500280636508</trade_no>
+			<trade_status>TRADE_SUCCESS</trade_status>
+			<use_coupon>F</use_coupon>
+		</trade>
+	</response>
+	<sign>F3zsazxf9DCIVmMXIXgmHAAWnT/2JkyhWHts0QQ40VUYgE5sApfoIPsxol+PnvSPlIqoOKH3kNRDcI7uLGz+wFm0uZDxgltQtUDPlbheAf2X7i6Ib/NI6CAfODZljoz3YTGBYpIbL4nHQL6p3GrzhqR4hhKpYVaV49Acicrr9es=</sign>
+	<sign_type>RSA</sign_type>
+</alipay>
