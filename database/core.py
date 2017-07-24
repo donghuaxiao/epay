@@ -5,6 +5,7 @@ import cx_Oracle
 RESULT_TYPE_DICT = 'DICT_TYPE'
 RESULT_TYPE_TUPLE = 'LIST_TYPE'
 
+
 def makedict(cursor):
     cols = [d[0].lower() for d in cursor.description]
 
@@ -23,21 +24,24 @@ def output_type_handler(cursor, name, default_type, size, precision, scale):
         return cursor.var(cx_Oracle.LONG_STRING, 80000, cursor.arraysize)
 
 
-class DbTemplate(object):
+class DatabaseTemplate(object):
     def __init__(self, connect_factory):
         self.connect_factory = connect_factory
 
-    def query_list(self, sql, params=None, outputtypehandler=None, row_factory=None, result_type=None):
+    def query_list(self, sql, params=None, outputtypehandler=None, row_factory=None):
         conn = self.connect_factory.get_connection()
         if outputtypehandler is not None:
             conn.outputtypehandler = output_type_handler
         try:
             cur = conn.cursor()
+
             if params is not None:
-                cur.execute(sql, params)
+                cur.prepare(sql)
+                cur.execute(None, params)
             else:
                 cur.execute(sql)
-            cur.rowfactory = makedict(cur)
+            if row_factory:
+                cur.rowfactory = row_factory(cur)
             results = cur.fetchall()
             return [row for row in results]
 
@@ -51,8 +55,9 @@ class DbTemplate(object):
         conn = self.connect_factory.get_connection()
         try:
             cur = conn.cursor()
-            if params is not None:
-                cur.execute(sql, params)
+            if params:
+                cur.prepare(sql)
+                cur.execute(None, params)
             else:
                 cur.execute(sql)
             result = cur.fetchall()
@@ -76,3 +81,47 @@ class DbTemplate(object):
         results = self._query_list(sql, params)
         return results[0][0]
 
+    def _execute(self, sql, params=None):
+        conn = self.connect_factory.get_connection()
+        try:
+            cur = conn.cursor()
+            if params:
+                cur.prepare(sql)
+                cur.execute(None, params)
+            else:
+                cur.execute(sql)
+            row_affected = cur.rowcount
+
+            print row_affected
+        except cx_Oracle.DatabaseError as ex:
+            print ex.message
+        except cx_Oracle.DataError as ex:
+            print ex.message
+
+    def execute(self, sql, params=None):
+        return self._execute(sql, params)
+
+    def update(self, sql, params=None):
+        conn = self.connect_factory.get_connection()
+        try:
+            conn.begin()
+            cur = conn.cursor()
+            if params:
+                cur.prepare(sql)
+                cur.executemany(None, params)
+            else:
+                cur.execute(sql)
+            row_affected = cur.rowcount
+            conn.commit()
+            return row_affected
+        except cx_Oracle.DatabaseError as ex:
+            print ex.message
+            conn.rollback()
+        except cx_Oracle.DataError as ex:
+            print ex.message
+            conn.rollback()
+        finally:
+            if cur is not None:
+                cur.close()
+            if conn is not None:
+                conn.close()
