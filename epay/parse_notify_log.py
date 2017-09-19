@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 
+#  Problems:有一部分通知， 渠道响应成功后， 单支付网关并没有处理，这部分订单的通知状态
+#   没有进行更新。
+#  Fix:
+#   根据日志中的报错,解析出消息ID， 然后跟新消息的通知状态。
+#
+
 import re
 import db_utils
 
@@ -25,7 +31,7 @@ def grep_update_notify_failure(port, log_date):
     return message_ids
 
 if __name__ == '__main__':
-    log_date = '2017-07-23'
+    log_date = '2017-08-16'
     ids_1 = grep_update_notify_failure(port=9722, log_date=log_date)
     print len(ids_1)
     ids_2 = grep_update_notify_failure(port=9822, log_date=log_date)
@@ -48,10 +54,8 @@ if __name__ == '__main__':
     results = dbtemplate.query_list(sql % ids)
     message_ids = [[res[0]] for res in results]
 
+    update_sql = "UPDATE T_MESSAGE SET STATUS = 2 WHERE MESSAGE_ID = :1"
 
-    update_sql = """
-    UPDATE T_MESSAGE SET STATUS = 2 WHERE MESSAGE_ID = :1
-    """
     if len(message_ids) != 0:
         row_affected = dbtemplate.update(update_sql, message_ids)
         print "row_affected: %s" % row_affected

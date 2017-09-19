@@ -108,8 +108,8 @@ def stat_channel_notify_rate(dbtemplate, start_time, end_time):
         data = (key, name, total, message_count, notify_rate)
         stat_datas.append(data)
 
-    wb = xlsxwriter.Workbook(u'通知成功率统计.xlsx')
-    sheet = wb.add_worksheet(u'6月成功率统计')
+    wb = xlsxwriter.Workbook(u'通知成功率统计07.xlsx')
+    sheet = wb.add_worksheet(u'7月成功率统计')
     cssformat = wb.add_format()
     cssformat.set_align('center')
     sheet.write_row(0, 0, header, cssformat)
@@ -144,8 +144,8 @@ if __name__ == '__main__':
                                               password=PASSWORD, port=PORT, service=SERVICE)
     db_template = DatabaseTemplate(connect_factory=connect_factory)
 
-    start_time = '20170601000000'
-    end_time = '20170630235959'
+    start_time = '20170701000000'
+    end_time = '20170731235959'
 
     stat_channel_notify_rate(db_template, start_time, end_time)
 
