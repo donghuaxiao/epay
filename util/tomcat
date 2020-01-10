@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 import os
 import sys
 import os.path
@@ -26,55 +27,55 @@ def tomcat_id():
     data, err = exec_cmd(cmd)
     
     items = data.split()
-    print items
-    print len(items)
+    if len(items) > 0:
+        print(items)
     if len(items) == 0:
         return -1
     proc_id = items[1]
 
     proc_dir="/proc/{}".format(proc_id)
     if os.path.exists(proc_dir):
-        print "tomcat id {}".format(proc_id)
+        print("tomcat id {}".format(proc_id))
         return proc_id
     return -1
         
 def stop_tomcat():
     pid = tomcat_id()
     if pid == -1:
-        print "tomcat is already stoped"
+        print("tomcat is already stoped")
         return
     
     cmd = "kill -9 {}".format(pid)
     retcode= exec_status(cmd)
     if retcode == 0:
-        print "stop tomcat successful"
+        print("stop tomcat successful")
     else:
-        print "stop tomcat failure" 
+        print("stop tomcat failure") 
      
 def start_tomcat():
     pid = tomcat_id()
     if pid != -1:
-        print "tomcat is already running"
+        print("tomcat is already stoped")
         return
 
     os.chdir(BIN_DIR)
-    print os.getcwd()
+    print(os.getcwd())
 
     data, err = exec_cmd("./startup.sh")
-    print data
+    print(data)
 
 def tomcat_status():
     pid = tomcat_id()
-    if pid != -1:
-        print "tomcat is stoped"
+    if pid == -1:
+        print("tomcat is stoped")
     else:
-        print "tomcat is running"
+        print("tomcat is running")
 
 if __name__ == '__main__':
     
     size = len(sys.argv)
     if size != 2:
-        print "tomcat start|stop|status"
+        print("tomcat start|stop|status")
         sys.exit(-1)
     cmd = sys.argv[1]
     
